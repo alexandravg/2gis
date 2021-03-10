@@ -25,7 +25,7 @@ public class CinemaController {
      */
     @GetMapping(value = "/all")
     public ResponseEntity<?> getAllCinemas() {
-        log.info("New request in /all");
+        log.info("New request in /cinema/all");
         return new ResponseEntity<>(cinemaService.getAllCinemas(), HttpStatus.OK);
     }
 
@@ -36,7 +36,7 @@ public class CinemaController {
      */
     @GetMapping(value = "/halls_in_cinema")
     public ResponseEntity<?> getCinemaHalls(@RequestParam UUID cinema) {
-        log.info("New request in /halls_in_cinema with cinema=" + cinema);
+        log.info("New request in /cinema/halls_in_cinema with cinema=" + cinema);
         return new ResponseEntity<>(cinemaService.getHallsInCinema(cinema), HttpStatus.OK);
     }
 
@@ -45,19 +45,7 @@ public class CinemaController {
      */
     @GetMapping(value = "/hall")
     public ResponseEntity<?> getSeatsInHall(@RequestParam UUID hall) {
-        log.info("New request in /hall with hall=" + hall);
+        log.info("New request in /cinema/hall with hall=" + hall);
         return new ResponseEntity<>(cinemaService.getSeatsInHall(hall), HttpStatus.OK);
-    }
-
-    @GetMapping(value = "/reservations")
-    public ResponseEntity<?> getAllReservation() {
-        log.info("New request in /reservations >> ");
-        return new ResponseEntity<>(cinemaService.getAllReservations(), HttpStatus.OK);
-    }
-
-    @PostMapping(value = "/reservation")
-    public ResponseEntity<?> makeReservation(@RequestBody List<ReservationRequest> reservationRequest) {
-        log.info("New request in /reservation >> " + reservationRequest.toString());
-        return new ResponseEntity<>(cinemaService.makeReservation(reservationRequest) ? HttpStatus.OK: HttpStatus.CONFLICT);
     }
 }
