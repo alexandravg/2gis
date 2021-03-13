@@ -24,7 +24,7 @@ public class ReservationController {
     /**
      * Endpoint for getting all reservations
      */
-    @GetMapping(value = "/all")
+    @GetMapping(value = "/reservation")
     public ResponseEntity<?> getAllReservation() {
         log.info("New request in /reservation/all >> ");
         return new ResponseEntity<>(reservationService.getAllReservations(), HttpStatus.OK);

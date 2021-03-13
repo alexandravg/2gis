@@ -23,7 +23,7 @@ public class CinemaController {
     /**
      * Endpoint for getting info about all cinemas in DB
      */
-    @GetMapping(value = "/all")
+    @GetMapping(value = "/cinema")
     public ResponseEntity<?> getAllCinemas() {
         log.info("New request in /cinema/all");
         return new ResponseEntity<>(cinemaService.getAllCinemas(), HttpStatus.OK);
@@ -36,7 +36,7 @@ public class CinemaController {
      */
     @GetMapping(value = "/halls_in_cinema")
     public ResponseEntity<?> getCinemaHalls(@RequestParam UUID cinema) {
-        log.info("New request in /cinema/halls_in_cinema with cinema=" + cinema);
+        log.info("New request in /cinema/halls_in_cinema with cinema = " + cinema);
         return new ResponseEntity<>(cinemaService.getHallsInCinema(cinema), HttpStatus.OK);
     }
 
@@ -45,7 +45,7 @@ public class CinemaController {
      */
     @GetMapping(value = "/hall")
     public ResponseEntity<?> getSeatsInHall(@RequestParam UUID hall) {
-        log.info("New request in /cinema/hall with hall=" + hall);
+        log.info("New request in /cinema/hall with hall = " + hall);
         return new ResponseEntity<>(cinemaService.getSeatsInHall(hall), HttpStatus.OK);
     }
 }
