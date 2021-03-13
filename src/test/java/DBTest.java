@@ -6,10 +6,10 @@ import ru.alexandravg.service.DBService;
 import ru.alexandravg.worker.DBServiceWorker;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class DBTest {
     DBServiceWorker dbService = new DBServiceWorker();
@@ -36,7 +36,9 @@ public class DBTest {
         String insertData = "INSERT INTO cinema VALUES ('7a7f645e-f08e-469e-979e-4e6c2678b88a', 'AURA')";
         try {
             dbService.executeUpdate(insertData);
-            System.out.println(connection.createStatement().execute("SELECT * FROM cinema"));
+            ResultSet resultSet = connection.createStatement().executeQuery("SELECT * FROM cinema");
+            resultSet.next();
+            assertEquals("AURA", resultSet.getString("name"));
         } catch (SQLException throwable) {
             throwable.printStackTrace();
         }
