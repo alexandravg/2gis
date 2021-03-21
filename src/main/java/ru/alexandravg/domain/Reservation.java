@@ -1,10 +1,14 @@
 package ru.alexandravg.domain;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 public class Reservation {
     private UUID id;
-    private Boolean valid;
+    private String name;
+    private LocalDateTime date;
+    private List<UUID> seats;
 
     public Reservation() {
     }
@@ -17,11 +21,27 @@ public class Reservation {
         this.id = id;
     }
 
-    public Boolean getValid() {
-        return valid;
+    public String getName() {
+        return name;
     }
 
-    public void setValid(Boolean valid) {
-        this.valid = valid;
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public LocalDateTime getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDateTime date) {
+        this.date = date;
+    }
+
+    public List<UUID> getSeats() {
+        return seats;
+    }
+
+    public void setSeats(List<UUID> seats) {
+        this.seats = seats;
     }
 }

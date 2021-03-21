@@ -9,6 +9,11 @@ public class Cinema {
     public Cinema() {
     }
 
+    public Cinema(UUID id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
     public UUID getId() {
         return id;
     }
@@ -23,5 +28,13 @@ public class Cinema {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return "Cinema{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
     }
 }

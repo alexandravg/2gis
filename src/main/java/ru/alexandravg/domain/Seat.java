@@ -4,11 +4,18 @@ import java.util.UUID;
 
 public class Seat {
     private UUID id;
-    private Long row;
-    private Long place;
+    private Integer line;
+    private Integer place;
     private Boolean taken;
 
     public Seat() {
+    }
+
+    public Seat(UUID id, Integer line, Integer place, Boolean taken) {
+        this.id = id;
+        this.line = line;
+        this.place = place;
+        this.taken = taken;
     }
 
     public UUID getId() {
@@ -19,19 +26,19 @@ public class Seat {
         this.id = id;
     }
 
-    public Long getRow() {
-        return row;
+    public Integer getLine() {
+        return line;
     }
 
-    public void setRow(Long row) {
-        this.row = row;
+    public void setLine(Integer line) {
+        this.line = line;
     }
 
-    public Long getPlace() {
+    public Integer getPlace() {
         return place;
     }
 
-    public void setPlace(Long place) {
+    public void setPlace(Integer place) {
         this.place = place;
     }
 
