@@ -46,15 +46,4 @@ public class DBServiceWorker implements DBService {
         Statement statement = connection.createStatement();
         return statement.executeUpdate(query);
     }
-
-//    private void createTables() throws SQLException {
-//        String createCinemas = "CREATE TABLE IF NOT EXISTS cinema (id UUID PRIMARY KEY, name TEXT)";
-//        String createHalls = "CREATE TABLE IF NOT EXISTS hall (id UUID PRIMARY KEY, name TEXT)";
-//        String createSeats = "CREATE TABLE IF NOT EXISTS seat (id UUID PRIMARY KEY, line INTEGER, place INTEGER, taken BOOLEAN)";
-//        String createReservations = "CREATE TABLE IF NOT EXISTS reservation (id UUID PRIMARY KEY, name TEXT, date TIMESTAMP WITHOUT TIME ZONE)";
-//        executeUpdate(createCinemas);
-//        executeUpdate(createHalls);
-//        executeUpdate(createSeats);
-//        executeUpdate(createReservations);
-//    }
 }

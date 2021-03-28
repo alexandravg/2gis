@@ -17,6 +17,11 @@ public class ReservationServiceWorker implements ReservationService {
     }
 
     @Override
+    public List<Reservation> getReservationsByName(String name) {
+        return null;
+    }
+
+    @Override
     public Boolean makeReservation(List<ReservationRequest> reservationRequest) {
         return null;
     }

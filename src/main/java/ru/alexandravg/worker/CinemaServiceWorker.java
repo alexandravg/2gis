@@ -13,7 +13,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
-//todo here is some working code
 @Component
 public class CinemaServiceWorker implements CinemaService {
     Connection connection = null;
