@@ -1,13 +1,11 @@
 package ru.alexandravg.worker;
 
-import com.sun.rowset.JdbcRowSetImpl;
 import org.springframework.stereotype.Component;
 import ru.alexandravg.domain.Cinema;
 import ru.alexandravg.domain.Hall;
 import ru.alexandravg.domain.Seat;
 import ru.alexandravg.service.CinemaService;
 
-import javax.sql.rowset.JdbcRowSet;
 import java.sql.*;
 import java.util.LinkedList;
 import java.util.List;

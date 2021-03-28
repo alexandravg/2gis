@@ -5,10 +5,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.alexandravg.domain.ReservationRequest;
 import ru.alexandravg.service.CinemaService;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController(value = "/cinema")

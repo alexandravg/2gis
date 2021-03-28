@@ -34,7 +34,7 @@ public class ReservationController {
      * Endpoint for making reservation
      */
     @PostMapping
-    public ResponseEntity<?> makeReservation(@RequestBody List<ReservationRequest> reservationRequest) {
+    public ResponseEntity<?> makeReservation(@RequestBody ReservationRequest reservationRequest) {
         log.info("New request in /reservation >> " + reservationRequest.toString());
         return new ResponseEntity<>(reservationService.makeReservation(reservationRequest) ? HttpStatus.OK : HttpStatus.CONFLICT);
     }

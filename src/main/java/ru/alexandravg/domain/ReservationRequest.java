@@ -1,25 +1,34 @@
 package ru.alexandravg.domain;
 
+import java.util.List;
 import java.util.UUID;
 
 public class ReservationRequest {
-    private UUID seatId;
+    private String name;
+    private List<UUID> seatId;
 
     public ReservationRequest() {
     }
 
-    public UUID getSeatId() {
-        return seatId;
-    }
-
-    public void setSeatId(UUID seatId) {
+    public ReservationRequest(String name, List<UUID> seatId) {
+        this.name = name;
         this.seatId = seatId;
     }
 
-    @Override
-    public String toString() {
-        return "ReservationRequest{" +
-                "seatId=" + seatId +
-                '}';
+    public List<UUID> getSeatId() {
+        return seatId;
     }
+
+    public void setSeatId(List<UUID> seatId) {
+        this.seatId = seatId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
 }

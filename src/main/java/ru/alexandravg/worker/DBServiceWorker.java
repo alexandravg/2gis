@@ -34,7 +34,7 @@ public class DBServiceWorker implements DBService {
     @Override
     public Connection connectDB() {
         try {
-            connection = DriverManager.getConnection("jdbc:h2:mem:test", "sa", "password"); //todo look up how to use properties
+            connection = DriverManager.getConnection("jdbc:h2:mem:testdb"); //todo look up how to use properties
         } catch (SQLException throwable) {
             throwable.printStackTrace();
         }

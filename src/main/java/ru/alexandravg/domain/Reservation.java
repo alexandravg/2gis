@@ -13,6 +13,13 @@ public class Reservation {
     public Reservation() {
     }
 
+    public Reservation(UUID id, String name, LocalDateTime date, List<UUID> seats) {
+        this.id = id;
+        this.name = name;
+        this.date = date;
+        this.seats = seats;
+    }
+
     public UUID getId() {
         return id;
     }
@@ -43,5 +50,15 @@ public class Reservation {
 
     public void setSeats(List<UUID> seats) {
         this.seats = seats;
+    }
+
+    @Override
+    public String toString() {
+        return "Reservation{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", date=" + date +
+                ", seats=" + seats +
+                '}';
     }
 }
