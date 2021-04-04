@@ -1,5 +1,6 @@
 package ru.alexandravg.domain;
 
+import java.util.Objects;
 import java.util.UUID;
 
 public class Cinema {
@@ -11,6 +12,11 @@ public class Cinema {
 
     public Cinema(UUID id, String name) {
         this.id = id;
+        this.name = name;
+    }
+
+    public Cinema(String id, String name) {
+        this.id = UUID.fromString(id);
         this.name = name;
     }
 
@@ -36,5 +42,18 @@ public class Cinema {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Cinema cinema = (Cinema) o;
+        return Objects.equals(id, cinema.id) && Objects.equals(name, cinema.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name);
     }
 }

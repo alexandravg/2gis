@@ -1,46 +1,41 @@
-import org.junit.After;
-import org.junit.Before;
-
-import org.junit.FixMethodOrder;
-import org.junit.Test;
-import org.junit.runners.MethodSorters;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import ru.alexandravg.domain.Cinema;
 import ru.alexandravg.domain.Hall;
 import ru.alexandravg.domain.Reservation;
 import ru.alexandravg.domain.ReservationRequest;
 import ru.alexandravg.service.CinemaService;
-import ru.alexandravg.service.DBService;
 import ru.alexandravg.service.ReservationService;
 import ru.alexandravg.worker.CinemaServiceWorker;
 import ru.alexandravg.worker.DBServiceWorker;
 import ru.alexandravg.worker.ReservationServiceWorker;
 
-import java.sql.Array;
 import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class DBTest {
-    DBServiceWorker dbService = new DBServiceWorker();
-    private Connection connection = null;
+    static DBServiceWorker dbService = new DBServiceWorker();
+    private static Connection connection = null;
 
-    @Before
-    public void setConnection(){
+    @BeforeAll
+    public static void setConnection() {
         connection = dbService.connectDB();
     }
 
-    @Test
-    public void doFirstActions() {
+    @BeforeAll
+    public static void doFirstActions() {
         dbService.makeAllNecessaryActions();
     }
 
-    public void closeConnection() throws SQLException {
+    @AfterAll
+    public static void closeConnection() throws SQLException {
         connection.close();
     }
 
@@ -52,51 +47,82 @@ public class DBTest {
     }
 
     @Test
-    public void getAllCinemas(){
+    public void getAllCinemas() {
         CinemaService cinemaService = new CinemaServiceWorker();
         List<Cinema> cinemas = cinemaService.getAllCinemas();
-        System.out.println(cinemas.size());
-        cinemas.forEach(System.out::println);
-        assertEquals(2,cinemas.size());
+        List<Cinema> expected = new LinkedList<>();
+        expected.add(new Cinema("1a7f645e-f08e-469e-979e-4e6c2678b88a", "AURA"));
+        expected.add(new Cinema("3a7f645e-f08e-469e-979e-4e6c2678b88a", "ROYAL"));
+        assertEquals(2, cinemas.size());
+        assertArrayEquals(expected.toArray(), cinemas.toArray());
     }
 
     @Test
-    public void getHallsByCinemaId(){
+    public void getHallsByCinemaId() {
         CinemaService cinemaService = new CinemaServiceWorker();
         List<Hall> halls = cinemaService.getHallsInCinema(UUID.fromString("1a7f645e-f08e-469e-979e-4e6c2678b88a"));
-        System.out.println(halls.size());
-        halls.forEach(System.out::println);
+        List<Hall> expected = new LinkedList<>();
+        expected.add(new Hall("7a7f645e-f08e-469e-979e-4e6c2678b88a", "BLACK"));
+        expected.add(new Hall("2a7f645e-f08e-469e-979e-4e6c2678b88a", "3D"));
         assertEquals(2, halls.size());
+        assertArrayEquals(expected.toArray(), halls.toArray());
     }
 
     @Test
-    public void getReservationAndSeats(){
+    public void getReservationAndSeats() {
         ReservationService reservationService = new ReservationServiceWorker();
         List<Reservation> reservations = reservationService.getAllReservations();
-        System.out.println(reservations.size());
-        reservations.forEach(System.out::println);
+        List<Reservation> expected = new LinkedList<>();
+        expected.add(new Reservation("42e0c9fc-7ab8-42ca-b1fa-8fd137c66f1c", "ALEXANDRA",
+                LocalDateTime.parse("2020-03-22T18:13:56.720"), new LinkedList<>()));
+
+        assertEquals(1, reservations.size());
+        assertArrayEquals(expected.toArray(), reservations.toArray());
     }
 
     @Test
-    public void getReservationByName(){
+    public void getReservationByName() {
         String name = "ALEXANDRA";
         ReservationService reservationService = new ReservationServiceWorker();
         List<Reservation> reservations = reservationService.getReservationsByName(name);
-        System.out.println(reservations.size());
-        reservations.forEach(System.out::println);
+        List<Reservation> expected = new LinkedList<>();
+        expected.add(new Reservation("42e0c9fc-7ab8-42ca-b1fa-8fd137c66f1c", "ALEXANDRA",
+                LocalDateTime.parse("2020-03-22T18:13:56.720"), new LinkedList<>()));
+
+        assertEquals(1, reservations.size());
+        assertArrayEquals(expected.toArray(), reservations.toArray());
     }
 
     @Test
-    public void makeReservation() {
+    public void makeReservationTrue() {
         ReservationService reservationService = new ReservationServiceWorker();
         List<UUID> seats = new LinkedList<>();
         seats.add(UUID.fromString("84f09724-a429-4d91-bdde-0286a41565a1"));
         ReservationRequest reservationRequest = new ReservationRequest(
                 "MAX", seats
         );
-
         boolean result = reservationService.makeReservation(reservationRequest);
-        System.out.println(result);
+        assertTrue(result);
     }
 
+    @Test
+    public void makeReservationFalse() {
+        ReservationService reservationService = new ReservationServiceWorker();
+        List<UUID> seats = new LinkedList<>();
+        seats.add(UUID.fromString("84f09724-a429-4d91-bdde-0286a41565a4"));
+        ReservationRequest reservationRequest = new ReservationRequest(
+                "MAX", seats
+        );
+        boolean result = reservationService.makeReservation(reservationRequest);
+        assertFalse(result);
+    }
+
+    @Test
+    public void revokeReservation() {
+        ReservationService reservationService = new ReservationServiceWorker();
+        reservationService.cancelReservation(UUID.fromString("42e0c9fc-7ab8-42ca-b1fa-8fd137c66f1c"));
+
+        List<Reservation> reservations = reservationService.getReservationsByName("ALEXANDRA");
+        assertArrayEquals(new LinkedList<>().toArray(), reservations.toArray());
+    }
 }

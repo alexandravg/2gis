@@ -49,7 +49,7 @@ INSERT INTO seat VALUES ('24f09724-a429-4d91-bdde-0286a41565a6', 1, 2, false, '5
 INSERT INTO seat VALUES ('34f09724-a429-4d91-bdde-0286a41565a7', 2, 1, false, '5a7f645e-f08e-469e-979e-4e6c2678b88a');
 INSERT INTO seat VALUES ('44f09724-a429-4d91-bdde-0286a41565a8', 2, 2, false, '5a7f645e-f08e-469e-979e-4e6c2678b88a');
 
-INSERT INTO reservation VALUES ('42e0c9fc-7ab8-42ca-b1fa-8fd137c66f1c', 'ALEXANDRA', '2020-03-22 18:13:56');
+INSERT INTO reservation VALUES ('42e0c9fc-7ab8-42ca-b1fa-8fd137c66f1c', 'ALEXANDRA', '2020-03-22T18:13:56.720');
 INSERT INTO reservation_seats VALUES ('42e0c9fc-7ab8-42ca-b1fa-8fd137c66f1c', '84f09724-a429-4d91-bdde-0286a41565a4');
 INSERT INTO reservation_seats VALUES ('42e0c9fc-7ab8-42ca-b1fa-8fd137c66f1c', '85f09724-a429-4d91-bdde-0286a41565a4');
 

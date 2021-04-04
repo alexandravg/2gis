@@ -2,6 +2,7 @@ package ru.alexandravg.domain;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 public class Reservation {
@@ -15,6 +16,13 @@ public class Reservation {
 
     public Reservation(UUID id, String name, LocalDateTime date, List<UUID> seats) {
         this.id = id;
+        this.name = name;
+        this.date = date;
+        this.seats = seats;
+    }
+
+    public Reservation(String id, String name, LocalDateTime date, List<UUID> seats) {
+        this.id = UUID.fromString(id);
         this.name = name;
         this.date = date;
         this.seats = seats;
@@ -60,5 +68,18 @@ public class Reservation {
                 ", date=" + date +
                 ", seats=" + seats +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Reservation that = (Reservation) o;
+        return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(date, that.date);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, date);
     }
 }

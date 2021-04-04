@@ -9,6 +9,7 @@ import ru.alexandravg.domain.ReservationRequest;
 import ru.alexandravg.service.ReservationService;
 import sun.font.CreatedFontTracker;
 
+import javax.management.Query;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -26,12 +27,13 @@ public class ReservationServiceWorker implements ReservationService {
 
     @Override
     public List<Reservation> getAllReservations() {
-        connection = dbServiceWorker.connectDB();
         List<Reservation> reservations = new LinkedList<>();
         String selectAll = "SELECT * FROM reservation";
+        connection = dbServiceWorker.connectDB();
         try {
             PreparedStatement selectAllQuery = connection.prepareStatement(selectAll);
             reservations = executeReservationQuery(selectAllQuery);
+            connection.close();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -48,6 +50,7 @@ public class ReservationServiceWorker implements ReservationService {
             PreparedStatement selectByNameQuery = connection.prepareStatement(selectByName);
             selectByNameQuery.setString(1, name);
             reservations = executeReservationQuery(selectByNameQuery);
+            connection.close();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -64,8 +67,8 @@ public class ReservationServiceWorker implements ReservationService {
 
         connection = dbServiceWorker.connectDB();
         try {
+            PreparedStatement selectSeatForCheckQuery = connection.prepareStatement(selectSeatForCheck);
             for (UUID id : reservationRequest.getSeatId()) {
-                PreparedStatement selectSeatForCheckQuery = connection.prepareStatement(selectSeatForCheck);
                 selectSeatForCheckQuery.setObject(1, id);
                 ResultSet resultSet = selectSeatForCheckQuery.executeQuery();
                 while (resultSet.next()) {
@@ -84,8 +87,8 @@ public class ReservationServiceWorker implements ReservationService {
             insertReservationQuery.setObject(3, LocalDateTime.now());
             insertReservationQuery.executeUpdate();
 
+            PreparedStatement insertReservationSeatsQuery = connection.prepareStatement(insertReservationSeats);
             for (UUID seatId : reservationRequest.getSeatId()) {
-                PreparedStatement insertReservationSeatsQuery = connection.prepareStatement(insertReservationSeats);
                 insertReservationSeatsQuery.setObject(1, id);
                 insertReservationSeatsQuery.setObject(2, seatId);
                 insertReservationSeatsQuery.executeUpdate();
@@ -101,7 +104,38 @@ public class ReservationServiceWorker implements ReservationService {
 
     @Override
     public void cancelReservation(UUID id) {
+        String deleteReservationSeat = "DELETE FROM reservation_seats WHERE reservation_id = ?";
+        String deleteReservation = "DELETE FROM reservation where id = ?";
+        String updateSeatStatus = "UPDATE seat SET taken = 'false' WHERE id = ?";
+        String selectReservationSeats = "SELECT * FROM reservation_seats WHERE reservation_id = ?";
 
+        connection = dbServiceWorker.connectDB();
+
+        try {
+            PreparedStatement selectReservationSeatsQuery = connection.prepareStatement(selectReservationSeats);
+            selectReservationSeatsQuery.setObject(1, id);
+            ResultSet resultSet = selectReservationSeatsQuery.executeQuery();
+            List<UUID> seats = new LinkedList<>();
+            while (resultSet.next()) {
+                seats.add(resultSet.getObject("seat_id", UUID.class));
+            }
+
+            PreparedStatement deleteReservationSeatQuery = connection.prepareStatement(deleteReservationSeat);
+            deleteReservationSeatQuery.setObject(1, id);
+            deleteReservationSeatQuery.executeUpdate();
+
+            PreparedStatement deleteReservationQuery = connection.prepareStatement(deleteReservation);
+            deleteReservationQuery.setObject(1, id);
+            deleteReservationQuery.executeUpdate();
+
+            PreparedStatement updateSeatStatusQuery = connection.prepareStatement(updateSeatStatus);
+            for (UUID seatId : seats) {
+                updateSeatStatusQuery.setObject(1, seatId);
+                updateSeatStatusQuery.executeUpdate();
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
     }
 
     private List<Reservation> executeReservationQuery(PreparedStatement statement) throws SQLException {
@@ -112,7 +146,7 @@ public class ReservationServiceWorker implements ReservationService {
             Reservation reservation = new Reservation(UUID.fromString(rows.getString("id")),
                     rows.getString("name"),
                     rows.getObject("date", LocalDateTime.class),
-                    new LinkedList<UUID>());
+                    new LinkedList<>());
             PreparedStatement getSeats = connection.prepareStatement(selectSeats);
             getSeats.setObject(1, reservation.getId());
             ResultSet resultSet = getSeats.executeQuery();
@@ -121,7 +155,6 @@ public class ReservationServiceWorker implements ReservationService {
             }
             reservations.add(reservation);
         }
-        connection.close();
         return reservations;
     }
 }
