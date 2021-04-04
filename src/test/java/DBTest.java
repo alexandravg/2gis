@@ -1,6 +1,4 @@
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import ru.alexandravg.domain.Cinema;
 import ru.alexandravg.domain.Hall;
 import ru.alexandravg.domain.Reservation;
@@ -24,8 +22,8 @@ public class DBTest {
     static DBServiceWorker dbService = new DBServiceWorker();
     private static Connection connection = null;
 
-    @BeforeAll
-    public static void setConnection() {
+    @BeforeEach
+    public void setConnection() {
         connection = dbService.connectDB();
     }
 
@@ -34,8 +32,8 @@ public class DBTest {
         dbService.makeAllNecessaryActions();
     }
 
-    @AfterAll
-    public static void closeConnection() throws SQLException {
+    @AfterEach
+    public void closeConnection() throws SQLException {
         connection.close();
     }
 
