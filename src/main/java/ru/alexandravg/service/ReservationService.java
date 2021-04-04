@@ -11,7 +11,7 @@ public interface ReservationService {
 
     List<Reservation> getReservationsByName(String name);
 
-    Boolean makeReservation(ReservationRequest reservationRequest);
+    UUID makeReservation(ReservationRequest reservationRequest);
 
     void cancelReservation(UUID id);
 }

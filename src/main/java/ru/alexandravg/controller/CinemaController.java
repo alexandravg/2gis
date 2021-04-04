@@ -9,7 +9,7 @@ import ru.alexandravg.service.CinemaService;
 
 import java.util.UUID;
 
-@RestController(value = "/cinema")
+@RestController
 public class CinemaController {
     private final Logger log = LoggerFactory.getLogger(this.getClass());
     private final CinemaService cinemaService;

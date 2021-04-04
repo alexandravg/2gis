@@ -101,8 +101,8 @@ public class DBTest {
         ReservationRequest reservationRequest = new ReservationRequest(
                 "MAX", seats
         );
-        boolean result = reservationService.makeReservation(reservationRequest);
-        assertTrue(result);
+        UUID result = reservationService.makeReservation(reservationRequest);
+        assertNotNull(result);
     }
 
     @Test
@@ -113,8 +113,8 @@ public class DBTest {
         ReservationRequest reservationRequest = new ReservationRequest(
                 "MAX", seats
         );
-        boolean result = reservationService.makeReservation(reservationRequest);
-        assertFalse(result);
+        UUID result = reservationService.makeReservation(reservationRequest);
+        assertNull(result);
     }
 
     @Test

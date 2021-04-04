@@ -1,15 +1,10 @@
 package ru.alexandravg.worker;
 
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
-import ru.alexandravg.domain.Cinema;
-import ru.alexandravg.domain.Hall;
 import ru.alexandravg.domain.Reservation;
 import ru.alexandravg.domain.ReservationRequest;
 import ru.alexandravg.service.ReservationService;
-import sun.font.CreatedFontTracker;
 
-import javax.management.Query;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -59,28 +54,27 @@ public class ReservationServiceWorker implements ReservationService {
     }
 
     @Override
-    public Boolean makeReservation(ReservationRequest reservationRequest) {
+    public UUID makeReservation(ReservationRequest reservationRequest) {
         String insertReservation = "INSERT INTO reservation VALUES (?, ?, ?)";
         String insertReservationSeats = "INSERT INTO reservation_seats VALUES (?, ?)";
         String updateSeatStatus = "UPDATE seat SET taken = 'true' where id = ?";
         String selectSeatForCheck = "SELECT * FROM seat WHERE id = ?";
-
+        UUID id = UUID.randomUUID();
         connection = dbServiceWorker.connectDB();
         try {
             PreparedStatement selectSeatForCheckQuery = connection.prepareStatement(selectSeatForCheck);
-            for (UUID id : reservationRequest.getSeatId()) {
-                selectSeatForCheckQuery.setObject(1, id);
+            for (UUID seatId : reservationRequest.getSeatId()) {
+                selectSeatForCheckQuery.setObject(1, seatId);
                 ResultSet resultSet = selectSeatForCheckQuery.executeQuery();
                 while (resultSet.next()) {
                     boolean taken = resultSet.getBoolean("taken");
-                    if (taken) return false;
+                    if (taken) return null;
                 }
                 PreparedStatement updateSeatStatusQuery = connection.prepareStatement(updateSeatStatus);
-                updateSeatStatusQuery.setObject(1, id);
+                updateSeatStatusQuery.setObject(1, seatId);
                 updateSeatStatusQuery.executeUpdate();
             }
 
-            UUID id = UUID.randomUUID();
             PreparedStatement insertReservationQuery = connection.prepareStatement(insertReservation);
             insertReservationQuery.setObject(1, id);
             insertReservationQuery.setObject(2, reservationRequest.getName());
@@ -96,10 +90,10 @@ public class ReservationServiceWorker implements ReservationService {
 
         } catch (SQLException throwables) {
             throwables.printStackTrace();
-            return false;
+            return null;
         }
 
-        return true;
+        return id;
     }
 
     @Override

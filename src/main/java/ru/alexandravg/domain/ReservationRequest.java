@@ -1,10 +1,13 @@
 package ru.alexandravg.domain;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.List;
 import java.util.UUID;
 
 public class ReservationRequest {
     private String name;
+    @JsonProperty(value = "seat_id", required = true)
     private List<UUID> seatId;
 
     public ReservationRequest() {

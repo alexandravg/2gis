@@ -11,7 +11,7 @@ import ru.alexandravg.service.ReservationService;
 import java.util.List;
 import java.util.UUID;
 
-@RestController(value = "/reservation")
+@RestController
 public class ReservationController {
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
@@ -33,13 +33,18 @@ public class ReservationController {
     /**
      * Endpoint for making reservation
      */
-    @PostMapping
+    @PostMapping(value = "/reservation")
     public ResponseEntity<?> makeReservation(@RequestBody ReservationRequest reservationRequest) {
         log.info("New request in /reservation >> " + reservationRequest.toString());
-        return new ResponseEntity<>(reservationService.makeReservation(reservationRequest) ? HttpStatus.OK : HttpStatus.CONFLICT);
+        UUID result = reservationService.makeReservation(reservationRequest);
+        if (result != null) {
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        }
     }
 
-    @PutMapping
+    @PutMapping(value = "/reservation")
     public ResponseEntity<?> cancelReservation(@RequestBody UUID reservationId) {
         log.info("New request in /reservation/cancel >> " + reservationId.toString());
         reservationService.cancelReservation(reservationId);
