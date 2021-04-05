@@ -1,5 +1,7 @@
 package ru.alexandravg.worker;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import ru.alexandravg.domain.Reservation;
 import ru.alexandravg.domain.ReservationRequest;
@@ -17,11 +19,13 @@ import java.util.UUID;
 @Component
 public class ReservationServiceWorker implements ReservationService {
 
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
     Connection connection = null;
     DBServiceWorker dbServiceWorker = new DBServiceWorker();
 
     @Override
     public List<Reservation> getAllReservations() {
+        log.info("Getting all reservations >>> in progress");
         List<Reservation> reservations = new LinkedList<>();
         String selectAll = "SELECT * FROM reservation";
         connection = dbServiceWorker.connectDB();
@@ -29,8 +33,9 @@ public class ReservationServiceWorker implements ReservationService {
             PreparedStatement selectAllQuery = connection.prepareStatement(selectAll);
             reservations = executeReservationQuery(selectAllQuery);
             connection.close();
+            log.info("Getting all reservations >>> success");
         } catch (SQLException throwables) {
-            throwables.printStackTrace();
+            log.error("Getting all reservations >>> error", throwables);
         }
 
         return reservations;
@@ -38,6 +43,7 @@ public class ReservationServiceWorker implements ReservationService {
 
     @Override
     public List<Reservation> getReservationsByName(String name) {
+        log.info("Getting reservations by name {} >>> in progress", name);
         connection = dbServiceWorker.connectDB();
         List<Reservation> reservations = new LinkedList<>();
         String selectByName = "SELECT * FROM reservation where name = ?";
@@ -46,8 +52,9 @@ public class ReservationServiceWorker implements ReservationService {
             selectByNameQuery.setString(1, name);
             reservations = executeReservationQuery(selectByNameQuery);
             connection.close();
+            log.info("Getting reservations by name {} >>> success", name);
         } catch (SQLException throwables) {
-            throwables.printStackTrace();
+            log.error("Getting reservations by name {} >>> error", name);
         }
 
         return reservations;
@@ -55,6 +62,7 @@ public class ReservationServiceWorker implements ReservationService {
 
     @Override
     public UUID makeReservation(ReservationRequest reservationRequest) {
+        log.info("Making reservation for {} >>> in progress", reservationRequest.toString());
         String insertReservation = "INSERT INTO reservation VALUES (?, ?, ?)";
         String insertReservationSeats = "INSERT INTO reservation_seats VALUES (?, ?)";
         String updateSeatStatus = "UPDATE seat SET taken = 'true' where id = ?";
@@ -68,7 +76,11 @@ public class ReservationServiceWorker implements ReservationService {
                 ResultSet resultSet = selectSeatForCheckQuery.executeQuery();
                 while (resultSet.next()) {
                     boolean taken = resultSet.getBoolean("taken");
-                    if (taken) return null;
+                    if (taken) {
+                        log.error("Making reservation for {} >>> error, seat {} taken", reservationRequest.toString(),
+                                seatId);
+                        return null;
+                    }
                 }
                 PreparedStatement updateSeatStatusQuery = connection.prepareStatement(updateSeatStatus);
                 updateSeatStatusQuery.setObject(1, seatId);
@@ -87,9 +99,10 @@ public class ReservationServiceWorker implements ReservationService {
                 insertReservationSeatsQuery.setObject(2, seatId);
                 insertReservationSeatsQuery.executeUpdate();
             }
+            log.info("Making reservation for {} >>> success", reservationRequest.toString());
 
         } catch (SQLException throwables) {
-            throwables.printStackTrace();
+            log.error("Making reservation for {} >>> error", reservationRequest.toString());
             return null;
         }
 
@@ -98,6 +111,7 @@ public class ReservationServiceWorker implements ReservationService {
 
     @Override
     public void cancelReservation(UUID id) {
+        log.info("Cancelling reservation {} >>> in progress", id);
         String deleteReservationSeat = "DELETE FROM reservation_seats WHERE reservation_id = ?";
         String deleteReservation = "DELETE FROM reservation where id = ?";
         String updateSeatStatus = "UPDATE seat SET taken = 'false' WHERE id = ?";
@@ -127,8 +141,9 @@ public class ReservationServiceWorker implements ReservationService {
                 updateSeatStatusQuery.setObject(1, seatId);
                 updateSeatStatusQuery.executeUpdate();
             }
+            log.info("Cancelling reservation {} >>> success", id);
         } catch (SQLException throwables) {
-            throwables.printStackTrace();
+            log.info("Cancelling reservation {} >>> error", id, throwables);
         }
     }
 

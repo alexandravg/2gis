@@ -1,7 +1,6 @@
 package ru.alexandravg.worker;
 
 import org.apache.ibatis.jdbc.ScriptRunner;
-import org.springframework.context.annotation.Bean;
 
 import java.io.*;
 import java.sql.Connection;

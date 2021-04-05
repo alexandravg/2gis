@@ -7,7 +7,7 @@ import java.util.UUID;
 
 public class ReservationRequest {
     private String name;
-    @JsonProperty(value = "seat_id", required = true)
+    @JsonProperty(value = "seat_id")
     private List<UUID> seatId;
 
     public ReservationRequest() {

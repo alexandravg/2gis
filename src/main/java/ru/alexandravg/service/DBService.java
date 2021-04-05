@@ -1,10 +1,20 @@
 package ru.alexandravg.service;
 
 import java.sql.Connection;
-import java.sql.SQLException;
 
+/**
+ * Interface for working with DB
+ */
 public interface DBService {
+
+    /**
+     * Method for connecting to db
+     * @return Connection object
+     */
     Connection connectDB();
 
-    int executeUpdate(String query) throws SQLException;
+    /**
+     * Method for making actions on start, e.g. connect DB, init DB, close connection
+     */
+    void makeAllNecessaryActions();
 }

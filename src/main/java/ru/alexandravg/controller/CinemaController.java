@@ -20,10 +20,11 @@ public class CinemaController {
 
     /**
      * Endpoint for getting info about all cinemas in DB
+     * @return json with List of Cinema objects
      */
     @GetMapping(value = "/cinema")
     public ResponseEntity<?> getAllCinemas() {
-        log.info("New request in /cinema/all");
+        log.info("New request in /cinema");
         return new ResponseEntity<>(cinemaService.getAllCinemas(), HttpStatus.OK);
     }
 
@@ -31,15 +32,18 @@ public class CinemaController {
      * Endpoint for getting info about halls in cinema
      *
      * @param cinema - name of the cinema
+     * @return json with List of Hall objects
      */
     @GetMapping(value = "/halls_in_cinema")
     public ResponseEntity<?> getCinemaHalls(@RequestParam UUID cinema) {
-        log.info("New request in /cinema/halls_in_cinema with cinema = " + cinema);
+        log.info("New request in /halls_in_cinema with cinema = " + cinema);
         return new ResponseEntity<>(cinemaService.getHallsInCinema(cinema), HttpStatus.OK);
     }
 
     /**
      * Endpoint for getting info about all seats in hall
+     * @param hall - id of the hall to look for it's seats
+     * @return json with List of Seat object
      */
     @GetMapping(value = "/hall")
     public ResponseEntity<?> getSeatsInHall(@RequestParam UUID hall) {

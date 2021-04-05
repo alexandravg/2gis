@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.*;
 import ru.alexandravg.domain.ReservationRequest;
 import ru.alexandravg.service.ReservationService;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -23,6 +22,7 @@ public class ReservationController {
 
     /**
      * Endpoint for getting all reservations
+     * @return json with List of Reservation objects
      */
     @GetMapping(value = "/reservation")
     public ResponseEntity<?> getAllReservation() {
@@ -32,6 +32,8 @@ public class ReservationController {
 
     /**
      * Endpoint for making reservation
+     * @param reservationRequest - json in body, ReservationRequest object
+     * @return json with UUID of made reservation OR 409 code if the seat is already taken
      */
     @PostMapping(value = "/reservation")
     public ResponseEntity<?> makeReservation(@RequestBody ReservationRequest reservationRequest) {
@@ -44,6 +46,10 @@ public class ReservationController {
         }
     }
 
+    /**
+     * Endpoint for cancelling reservation
+     * @param reservationId  - json with id of reservation that must be cancelled
+     */
     @PutMapping(value = "/reservation")
     public ResponseEntity<?> cancelReservation(@RequestBody UUID reservationId) {
         log.info("New request in /reservation/cancel >> " + reservationId.toString());

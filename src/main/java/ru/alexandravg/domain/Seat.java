@@ -49,4 +49,14 @@ public class Seat {
     public void setTaken(Boolean taken) {
         this.taken = taken;
     }
+
+    @Override
+    public String toString() {
+        return "Seat{" +
+                "id=" + id +
+                ", line=" + line +
+                ", place=" + place +
+                ", taken=" + taken +
+                '}';
+    }
 }
